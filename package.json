@@ -1,0 +1,62 @@
+{
+  "name": "listen-desktop",
+  "productName": "聆听",
+  "version": "1.1.2",
+  "private": true,
+  "description": "聆听 有声书桌面版（逆向自 Android 客户端）",
+  "main": "main.js",
+  "author": "聆听",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win --x64"
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.0.0",
+    "tailwindcss": "^3.4.17"
+  },
+  "build": {
+    "appId": "com.miaoda.listening.desktop",
+    "productName": "聆听",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "renderer/**/*",
+      "build/icon.ico",
+      "build/icon.png"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "聆听",
+      "artifactName": "聆听-${version}-安装包.${ext}"
+    },
+    "portable": {
+      "artifactName": "聆听-${version}-便携版.${ext}"
+    },
+    "compression": "maximum"
+  }
+}
