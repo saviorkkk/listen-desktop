@@ -7,6 +7,12 @@
 - 主题：`--bg:#070a14` / `--gold:#f5b83d` / `--blur:blur(22px) saturate(160%)`
 - 音质：标准 128K / 高品质 320K / 无损 FLAC（三档，与手机 App 一致）
 
+![主界面](docs/main.png)
+
+![全屏歌词](docs/lyrics.png)
+
+![点赞粒子](docs/particles.png)
+
 ---
 
 ## 一、逆向过程
