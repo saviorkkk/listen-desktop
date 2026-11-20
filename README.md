@@ -13,6 +13,9 @@
 
 ![点赞粒子](docs/particles.png)
 
+**下载安装包**：[Releases · v1.1.2](https://github.com/saviorkkk/listen-desktop/releases/latest)（安装版 / 便携版，Windows x64）
+
+
 ---
 
 ## 一、逆向过程
