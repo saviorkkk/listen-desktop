@@ -19,3 +19,7 @@ ui_out.txt
 Thumbs.db
 desktop.ini
 .DS_Store
+
+# icon 生成中间产物
+build/icon_src.png
+build/note_art.png
