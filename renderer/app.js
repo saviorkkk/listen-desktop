@@ -552,13 +552,21 @@ function clearSearchHistory() {
   API.storeSet({ settings: state.settings });
   renderSearchDrop();
 }
+function removeSearchHistory(kw) {
+  kw = String(kw || '');
+  state.searchHistory = (state.searchHistory || []).filter((x) => x !== kw);
+  state.settings.searchHistory = state.searchHistory;
+  API.storeSet({ settings: state.settings });
+  renderSearchDrop();
+}
 function renderSearchDrop() {
   const drop = $('searchDrop');
   const tags = $('sdTags');
   if (!drop || !tags) return;
   const h = state.searchHistory || [];
+  const X_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="M5.5 5.5l13 13M18.5 5.5l-13 13"/></svg>';
   tags.innerHTML = h.length
-    ? h.map((k) => `<button class="sd-tag" data-act="sduse" data-kw="${escAttr(k)}" title="${escAttr(k)}">${esc(k.length > 16 ? k.slice(0, 16) + '…' : k)}</button>`).join('')
+    ? h.map((k) => `<span class="sd-tag-wrap"><button class="sd-tag" data-act="sduse" data-kw="${escAttr(k)}" title="${escAttr(k)}">${esc(k.length > 16 ? k.slice(0, 16) + '…' : k)}</button><button class="sd-x" data-act="sddel" data-kw="${escAttr(k)}" title="删除这条记录" aria-label="删除 ${escAttr(k)}">${X_SVG}</button></span>`).join('')
     : `<div class="sd-empty">暂无搜索记录</div>`;
 }
 function openSearchDrop(force) {
@@ -1511,6 +1519,12 @@ function bindEvents() {
       case 'srtab': switchSearchTab(el.dataset.tab); break;
       case 'plopen': state.plOpen = { id: el.dataset.id }; openPlaylist(el.dataset.id); break;
       case 'backsearch': state.plOpen = null; renderSearch(); break;
+      case 'sddel': {
+        e.stopPropagation();
+        removeSearchHistory(el.dataset.kw || '');
+        showToast('已删除该条搜索记录');
+        break;
+      }
       case 'sduse': {
         const kw = el.dataset.kw || '';
         const inp = $('searchInput');
