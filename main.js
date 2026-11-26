@@ -708,6 +708,7 @@ ipcMain.handle('lib:reveal', async (_e, file) => {
 /* 收藏 / 历史                                                         */
 /* ================================================================== */
 ipcMain.handle('store:get', async () => STORE);
+ipcMain.handle('app:version', async () => app.getVersion());
 ipcMain.handle('store:set', async (_e, patch) => {
   STORE = Object.assign({}, STORE, patch);
   saveStore();

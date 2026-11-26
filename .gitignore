@@ -20,6 +20,9 @@ Thumbs.db
 desktop.ini
 .DS_Store
 
-# icon Éú³ÉÖĞ¼ä²úÎï
+# icon ï¿½ï¿½ï¿½ï¿½ï¿½Ğ¼ï¿½ï¿½ï¿½ï¿½
 build/icon_src.png
 build/note_art.png
+
+# Release ä¸­è½¬ç›®å½•ï¼ˆå«å¤§ä½“ç§¯ exeï¼Œä¸å…¥åº“ï¼‰
+.rel/

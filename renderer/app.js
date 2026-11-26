@@ -566,7 +566,7 @@ function renderSearchDrop() {
   const h = state.searchHistory || [];
   const X_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="M5.5 5.5l13 13M18.5 5.5l-13 13"/></svg>';
   tags.innerHTML = h.length
-    ? h.map((k) => `<span class="sd-tag-wrap"><button class="sd-tag" data-act="sduse" data-kw="${escAttr(k)}" title="${escAttr(k)}">${esc(k.length > 16 ? k.slice(0, 16) + '…' : k)}</button><button class="sd-x" data-act="sddel" data-kw="${escAttr(k)}" title="删除这条记录" aria-label="删除 ${escAttr(k)}">${X_SVG}</button></span>`).join('')
+    ? h.map((k) => `<span class="sd-tag-wrap"><button class="sd-tag" data-act="sduse" data-kw="${escAttr(k)}">${esc(k.length > 16 ? k.slice(0, 16) + '…' : k)}</button><button class="sd-x" data-act="sddel" data-kw="${escAttr(k)}" aria-label="删除这条记录">${X_SVG}</button></span>`).join('')
     : `<div class="sd-empty">暂无搜索记录</div>`;
 }
 function openSearchDrop(force) {
@@ -1745,6 +1745,7 @@ async function boot() {
   document.body.classList.add('paused');
   try { API.onWinState(() => {}); } catch (e) {}
   await loadStore();
+  try { const v = await API.appVersion(); const el = $('appVer'); if (v && el) el.textContent = 'v' + v; } catch (e) {}
   updateCounts(); updateVolumeUI(); updateModeBtn(); updateHistBtns(); syncPlayState(); updateProgressUI();
   applyGlow();
   renderMain();

@@ -31,6 +31,7 @@ contextBridge.exposeInMainWorld('L', {
   libReveal: (f) => ipcRenderer.invoke('lib:reveal', f),
 
   // 状态
+  appVersion: () => ipcRenderer.invoke('app:version'),
   storeGet: () => ipcRenderer.invoke('store:get'),
   storeSet: (patch) => ipcRenderer.invoke('store:set', patch),
   favToggle: (item) => ipcRenderer.invoke('store:favToggle', item),
