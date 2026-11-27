@@ -8,6 +8,7 @@ contextBridge.exposeInMainWorld('L', {
   mPlaylist: (id, pn, rn) => ipcRenderer.invoke('m:playlist', id, pn, rn),
   mChartNodes: () => ipcRenderer.invoke('m:chartNodes'),
   mChartSongs: (id, pn, rn) => ipcRenderer.invoke('m:chartSongs', id, pn, rn),
+  // 未接线：m:album / m:artist 主进程已实现，renderer 暂无专辑/歌手页调用（保留待做）
   mAlbum: (id) => ipcRenderer.invoke('m:album', id),
   mArtist: (id) => ipcRenderer.invoke('m:artist', id),
   mArtistSongs: (id, pn) => ipcRenderer.invoke('m:artistSongs', id, pn),

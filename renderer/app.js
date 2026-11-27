@@ -50,12 +50,7 @@ window.__state = state;
 const REG = new Map();
 const Q_LABEL = { flac: 'FLAC', '320k': '320K', '128k': '128K' };
 const Q_FULL = { flac: '无损 FLAC', '320k': '高品质 320K', '128k': '标准 128K' };
-const Q_ORDER = ['320k', 'flac', '128k'];
 const Q_EXT = { flac: 'flac', '320k': 'mp3', '128k': 'mp3' };
-const VIEW_TITLE = {
-  discover: '酷我热歌榜', charts: '排行榜', playlists: '推荐榜单',
-  favorites: '我的收藏', downloads: '已下载', recent: '最近播放', settings: '设置',
-};
 
 const $ = (id) => document.getElementById(id);
 const contentEl = () => $('content');
@@ -147,11 +142,6 @@ function hydrateCovers(root) {
     img.onerror = () => step();
     step();
   });
-}
-function swapCover(el, t) {
-  if (!el) return;
-  el.innerHTML = covInner(t);
-  hydrateCovers(el.parentNode || el);
 }
 
 /* ---------------- Toast ---------------- */
@@ -752,7 +742,6 @@ async function resolveUrl(t, quality) {
   URL_PENDING.set(key, task);
   try { return await task; } finally { URL_PENDING.delete(key); }
 }
-function prefetchTrack(key) { const t = REG.get(key); if (t) prefetchTrackObj(t); }
 function prefetchTrackObj(t) {
   if (!t || !t.rid) return;
   const key = t.rid + '|' + state.quality;
@@ -1025,8 +1014,33 @@ async function toggleDownload(key) {
     if (state.view === 'downloads') renderMain(); else refreshRows();
   } catch (e) { showToast('下载失败：' + (e.message || e)); }
 }
-async function removeLib(file) {
-  await API.libRemove(file);
+/* 下载批量进度：顶部 2px 细进度条（p = {index,count,title,got,total,done}） */
+let DL_HIDE_TIMER = 0;
+function handleDlProgress(p) {
+  const strip = $('dlStrip');
+  const fill = $('dlFill');
+  if (!strip || !fill || !p) return;
+  const count = Number(p.count) || 1;
+  const idx = Number(p.index) || 0;
+  if (p.done) {
+    const val = ((idx + 1) / count) * 100;
+    fill.style.width = val.toFixed(1) + '%';
+    if (idx + 1 >= count) {
+      clearTimeout(DL_HIDE_TIMER);
+      DL_HIDE_TIMER = setTimeout(() => {
+        strip.classList.remove('show');
+        setTimeout(() => { fill.style.width = '0%'; }, 340);
+      }, 520);
+    }
+  } else {
+    const bytes = Number(p.total) || 0;
+    const inner = bytes > 0 ? Math.min(1, (Number(p.got) || 0) / bytes) : 0;
+    const val = ((idx + inner) / count) * 100;
+    strip.classList.add('show');
+    fill.style.width = Math.max(2, Math.min(99.4, val)).toFixed(1) + '%';
+  }
+}
+async function removeLib(file) {  await API.libRemove(file);
   state.library = await API.libList();
   updateCounts(); renderMain();
 }
@@ -1386,12 +1400,6 @@ function setSpeed(v) {
   API.storeSet({ settings: state.settings });
   syncSpeedUI();
 }
-function cycleSpeed() {
-  const list = [1, 1.25, 1.5, 2, 0.75, 0.5];
-  const i = list.indexOf(state.speed);
-  setSpeed(list[(i + 1) % list.length]);
-  showToast('播放倍速 ' + state.speed + 'x');
-}
 function toggleMute() {
   state.muted = !state.muted;
   if (!state.muted && state.volume === 0) state.volume = 0.5;
@@ -1744,6 +1752,7 @@ async function boot() {
   bindEvents();
   document.body.classList.add('paused');
   try { API.onWinState(() => {}); } catch (e) {}
+  try { API.onDownloadProgress(handleDlProgress); } catch (e) {}
   await loadStore();
   try { const v = await API.appVersion(); const el = $('appVer'); if (v && el) el.textContent = 'v' + v; } catch (e) {}
   updateCounts(); updateVolumeUI(); updateModeBtn(); updateHistBtns(); syncPlayState(); updateProgressUI();

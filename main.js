@@ -195,7 +195,6 @@ function decodeEnt(s) {
     .trim();
 }
 
-const QUALITY_TAG = { '128k': 'MP3128', '320k': 'MP3H' };
 
 /* App 同源后端：kuwo-play 支持 128 / 320 / 无损(flac) 三档，并附带歌词 */
 const APP_BACKEND = 'https://backend.appmiaoda.com/projects/supabase364143248983240704/functions/v1';
@@ -647,13 +646,13 @@ ipcMain.handle('dl:batch', async (e, payload) => {
     const it = items[i];
     try {
       const r = await downloadOne({ ...it, dir, ext }, (p) => {
-        e.sender.send('dl:progress', { index: i, total: items.length, title: it.fileName, ...p });
+        e.sender.send('dl:progress', { index: i, count: items.length, title: it.fileName, ...p });
       });
       results.push({ ok: true, title: it.fileName, file: r.file, skipped: r.skipped, rid: it.rid || '', covers: it.covers || '' });
     } catch (err) {
       results.push({ ok: false, title: it.fileName, error: String(err.message || err) });
     }
-    e.sender.send('dl:progress', { index: i, total: items.length, title: it.fileName, done: true });
+    e.sender.send('dl:progress', { index: i, count: items.length, title: it.fileName, done: true });
   }
   for (const r of results) {
     if (r.ok) {

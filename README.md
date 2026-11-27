@@ -13,7 +13,7 @@
 
 ![点赞粒子](docs/particles.png)
 
-**下载安装包**：[Releases · v1.1.2](https://github.com/saviorkkk/listen-desktop/releases/latest)（安装版 / 便携版，Windows x64）
+**下载安装包**：[Releases · v1.1.4](https://github.com/saviorkkk/listen-desktop/releases/latest)（安装版 / 便携版，Windows x64）
 
 
 ---
@@ -122,7 +122,7 @@ https://music.163.com/api/song/lyric?id={id}&lv=1&kv=1&tv=-1                    
 - **音质**：点顶栏胶囊或底栏音质标签 → 弹出可选菜单（标准 128K / 高品质 320K / 无损 FLAC，当前档带勾选），点外部关闭；设置页同样三档直选。切换按当前进度重载
 - **歌词**：全屏抽屉，**环境壁纸（当前封面放大 124% + blur(90px) + 压暗 veil + 双暖金光晕）** + 黑胶唱片旋转 + **逐字点亮（卡拉 OK 扫光）** + **景深层次（当前行放大/邻居按距离缩小变暗）** + **缓动居中滚动**，右侧歌词区是独立玻璃卡片，点歌词跳转；credit / 广告 / 版权行（含带时间轴的）自动归入顶部灰色信息区，不参与高亮
 - **收藏 / 最近播放 / 已下载**：本地持久化（侧栏计数实时同步）
-- **下载**：单曲下载到设置目录，自动反查封面（旧条目按「歌名 - 歌手」回填）
+- **下载**：单曲下载到设置目录，自动反查封面（旧条目按「歌名 - 歌手」回填）；批量下载时窗口顶部显示 2px 金色细进度条（按「已完成首数 + 当前首字节进度」合成总进度，全部完成后自动淡出）
 
 ---
 
@@ -205,4 +205,4 @@ npx electron-builder --win --x64
 - **播放中行内的进度条**：`.row` 加 `position:relative`，行模板末尾插 `<div class="row-progress"><i></i></div>`（`absolute;left:14px;right:14px;bottom:5px;height:3px`，仅 `.row.playing` 显示），`updateProgressUI()` 每次同步 `.panel.glass .row.playing .row-progress i` 的宽度；`.eq` 三柱在暂停时由 `body.paused .eq i{animation-play-state:paused}` 冻结。
 - `prefers-reduced-motion: reduce` 下：`#particleLayer{display:none}`、入场动画 `animation:none`、`*{transition:none}`；JS 侧 `reduceMotion` 为真时既不生成粒子也不做按压回弹。
 - 音源为第三方公开接口，可能随上游变更失效；接口异常时以「播放失败」提示，不做静默伪造。
-
+- **下载进度事件字段**：主进程 downloadOne 每 300ms 回调节字节数 {got,total}，dl:batch 转发为 {index,count,title,got,total,done}；	otal 是**当前文件字节数**、count 是**本批首数**。曾把首数也写进 	otal，结果被 ...p 展开覆盖，进度算成 0；改外层为 count 后正常。渲染端 handleDlProgress() 用 (index + got/total) / count 合成总进度，写到顶部 2px .dl-strip。

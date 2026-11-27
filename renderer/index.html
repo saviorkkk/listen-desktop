@@ -243,7 +243,7 @@
   .card{position:relative;border-radius:var(--r-md);overflow:hidden;text-align:left;padding:0;
     border:1px solid var(--stroke-soft);background:rgba(255,255,255,.04);
     box-shadow:0 14px 30px rgba(0,0,0,.35);transition:transform .22s ease, box-shadow .22s ease}
-  .card:hover{transform:translateY(-4px);box-shadow:0 22px 40px rgba(0,0,0,.5)}
+  .card:hover{box-shadow:0 22px 40px rgba(0,0,0,.5)}
   .card .cover{position:relative;aspect-ratio:16/10;overflow:hidden}
   .card .cover img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
   .card:hover .cover img{transform:scale(1.06)}
@@ -545,9 +545,9 @@
   @keyframes jellyIn{0%{opacity:0;transform:scale(.88,1.06) translateY(10px)}55%{opacity:1;transform:scale(1.03,.97) translateY(-2px)}78%{transform:scale(.99,1.01) translateY(0)}100%{opacity:1;transform:scale(1,1) translateY(0)}}
   @keyframes jellyFloat{0%,100%{transform:scale(1,1)}50%{transform:scale(1.04,.96)}}
   @keyframes heartBeat{0%,100%{transform:scale(1)}22%{transform:scale(1.18,.88)}44%{transform:scale(.92,1.1)}66%{transform:scale(1.06,.97)}}
-  .nav-item,.tb-btn,.chip,.play-all,.more,.side-ctl,.op-btn,.speed,.flac,.load-more,.clear-search{
+  .nav-item,.tb-btn,.chip,.play-all,.more,.side-ctl,.op-btn,.speed,.flac{
     transition:transform .45s var(--spring),background .18s,color .18s,border-color .18s,box-shadow .3s var(--spring-soft)}
-  .nav-item:active,.tb-btn:active,.chip:active,.play-all:active,.more:active,.side-ctl:active,.load-more:active{
+  .nav-item:active,.tb-btn:active,.chip:active,.play-all:active,.more:active,.side-ctl:active{
     animation:jellySquash .5s var(--spring)}
   .op-btn:active{animation:jellySquash .48s var(--spring)}
   .play-btn{transition:transform .5s var(--spring),filter .16s,box-shadow .3s}
@@ -564,7 +564,6 @@
   .op-btn.like-burst{animation:jellyPop .55s var(--spring)}
   #nowLike.liked svg{animation:heartBeat .55s var(--spring)}
   .jelly-press{animation:jellySquash .5s var(--spring) !important}
-  .jelly-pop{animation:jellyPop .58s var(--spring) !important}
   .cards .card{animation:jellyIn .6s var(--spring) both}
   .cards .card:nth-child(2){animation-delay:.06s}.cards .card:nth-child(3){animation-delay:.12s}.cards .card:nth-child(4){animation-delay:.18s}
   .panel.glass .row{animation:jellyIn .45s var(--spring) both}
@@ -598,6 +597,13 @@
   .like-dot{border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,.25)}
   .like-ring{border:2px solid rgba(255,93,115,.75);border-radius:50%;background:transparent}
   .like-plus{color:#ffcf6b;font-weight:900;line-height:1;text-shadow:0 2px 10px rgba(245,184,61,.6)}
+
+  /* ---------- 下载进度条 ---------- */
+  .dl-strip{position:fixed;left:0;right:0;top:0;height:2px;z-index:300;pointer-events:none;opacity:0;transition:opacity .3s ease}
+  .dl-strip.show{opacity:1}
+  .dl-strip i{display:block;height:100%;width:0%;border-radius:0 2px 2px 0;
+    background:linear-gradient(90deg,var(--gold-2),#efa92c);
+    box-shadow:0 0 10px rgba(245,184,61,.7);transition:width .25s ease}
 
   @media (max-width:1180px){ .lyrics{grid-template-columns:280px minmax(0,1fr)} }
   @media (max-width:760px){ .cards{grid-template-columns:repeat(2,minmax(0,1fr))} }
@@ -641,6 +647,7 @@
 </head>
 <body class="paused">
 <div id="particleLayer" aria-hidden="true"></div>
+<div class="dl-strip" id="dlStrip" aria-hidden="true"><i id="dlFill"></i></div>
 <div class="ambient" aria-hidden="true">
   <img id="ambientImg" src="" alt="">
   <div class="veil"></div>
@@ -723,24 +730,7 @@
       </div>
     </header>
 
-    <main class="content" id="content">
-      <section id="recommendSec">
-        <div class="sec-head"><h2>为你推荐</h2><button class="more" id="moreCharts">更多榜单 <span aria-hidden="true">›</span></button></div>
-        <div class="cards" id="cards"></div>
-      </section>
-
-      <div class="sec-head">
-        <h2 id="listTitle">酷我热歌榜</h2>
-        <button class="play-all" id="playAllBtn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.8v14.4L19 12 7 4.8Z"/></svg>播放全部</button>
-        <button class="more" id="allBtn">全部 <span aria-hidden="true">›</span></button>
-      </div>
-      <div class="sec-sub" id="listSub"></div>
-      <section class="panel glass" id="listPanel">
-        <div class="thead" id="listThead"><span style="text-align:center">#</span><span>歌曲 / 歌手</span><span>专辑</span><span style="text-align:right">时长</span><span class="r">操作</span></div>
-        <div id="rows"></div>
-      </section>
-      <div class="loadmore" id="listMore" style="display:none"></div>
-    </main>
+    <main class="content" id="content"><div class="sec-head"><h2>为你推荐</h2></div></main>
   </div>
 </div>
 

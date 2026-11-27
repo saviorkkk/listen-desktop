@@ -15,14 +15,24 @@ ui_out.txt
 # 旧版单文件实现（已被 renderer/ 目录版取代，仅本地保留）
 /app.js
 
-# 系统文件
-Thumbs.db
-desktop.ini
-.DS_Store
+# 本地调试脚本（不进仓库）
+capture.ps1
+capture_pid.ps1
+cdp.js
+dbg.js
+grab.ps1
+run_expr.js
+test_drag3.ps1
+test_lyric.js
 
-# icon �����м����
+# icon 中间文件
 build/icon_src.png
 build/note_art.png
 
 # Release 中转目录（含大体积 exe，不入库）
 .rel/
+
+# 系统文件
+Thumbs.db
+desktop.ini
+.DS_Store
